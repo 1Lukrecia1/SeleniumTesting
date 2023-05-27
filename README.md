@@ -59,19 +59,19 @@
             <td>Testy vstupů</td>
             <td>Vyberete 2* netriviální vstupy aplikace (např. formulář, rest rozhraní, signatura metody).</td>
             <td></td>
-            <td></td>
+            <td>✅</td>
         </tr>
         <tr>
             <td></td>
             <td>Nevolte přihlašovací, registrační a podobné triviální formuláře.</td>
             <td></td>
-            <td></td>
+            <td>✅</td>
         </tr>
         <tr>
             <td></td>
             <td>Konzultujte se cvičícím při výberu aplikace.</td>
             <td></td>
-            <td></td>
+            <td>✅</td>
         </tr>
         <tr>
             <td></td>
@@ -83,7 +83,7 @@
             <td></td>
             <td>Vytvořte kombinace testovacích dat technikou pairwise testing.</td>
             <td>2</td>
-            <td></td>
+            <td>✅</td>
         </tr>
         <tr>
             <td>Testy průchodů</td>
