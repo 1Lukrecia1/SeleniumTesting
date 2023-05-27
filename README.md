@@ -8,7 +8,7 @@
 </h6>
 <h1><a href="https://docs.google.com/document/d/1BZ_6HnqLg4oIZJ1oCOonkFe97EWn326Tkt-Dyr4gx5M/edit?usp=sharing">DOKUMENTACE</a></h1>
 
-![Vivino_logo](https://github.com/PasportnikovIvan/test/assets/126193209/ae0714c4-f5d8-4944-b2f2-088d6398df03)
+![Vivino_logo](https://github.com/1Lukrecia1/SeleniumTesting/assets/126193209/3efe832f-c78d-4ded-9ca1-fa7889cf8f59)
 
 <table>
     <thead>
