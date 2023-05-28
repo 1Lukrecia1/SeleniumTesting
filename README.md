@@ -110,20 +110,14 @@
             <td></td>
         </tr>
         <tr>
-            <td>Unit testy</td>
-            <td>Vytvořte 10* unit testů testující netriviální metody (netestujte getery, setery a podobně jednoduché metody).</td>
-            <td>5</td>
+            <td>Selenium</td>
+            <td>10 Selenium testů (každý za 1 bod)</td>
+            <td>10</td>
             <td></td>
         </tr>
         <tr>
             <td></td>
-            <td>Minimálně 5 (3)* unit testů má používat Mockito.</td>
-            <td>5</td>
-            <td></td>
-        </tr>
-        <tr>
-            <td>Integrační testy</td>
-            <td>Vytvořte 8* integračních/procesních testů.</td>
+            <td>Data provider (CSV) pro minimálně 3 testy (každý za 2 body)</td>
             <td>6</td>
             <td></td>
         </tr>
