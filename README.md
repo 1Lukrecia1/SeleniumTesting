@@ -89,7 +89,7 @@
             <td>Testy průchodů</td>
             <td>Vytvořte diagramy pro 2* procesy ve vaší aplikaci.</td>
             <td>2</td>
-            <td></td>
+            <td>✅</td>
         </tr>
         <tr>
             <td></td>
