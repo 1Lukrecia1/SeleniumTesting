@@ -77,7 +77,7 @@
             <td></td>
             <td>Pro každý vstupní parametr analyzujte EC a určete mezní podmínky (pokud možno).</td>
             <td>2</td>
-            <td></td>
+            <td>✅</td>
         </tr>
         <tr>
             <td></td>
