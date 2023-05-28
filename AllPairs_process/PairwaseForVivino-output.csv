@@ -1,0 +1,16 @@
+# ACTS Test Suite Generation: Sun May 28 18:38:08 CEST 2023
+#  '*' represents don't care value 
+# Degree of interaction coverage: 2
+# Number of parameters: 3
+# Maximum number of values per parameter: 3
+# Number of configurations: 9
+WineColour,Region,Rating
+White,Napa Vallley,36
+Red,Napa Vallley,38
+White,Napa Vallley,42
+Red,Piemonte,36
+White,Piemonte,38
+Red,Piemonte,42
+White,Rhone Valley,36
+Red,Rhone Valley,38
+White,Rhone Valley,42
