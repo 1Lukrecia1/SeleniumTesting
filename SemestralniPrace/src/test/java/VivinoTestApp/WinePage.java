@@ -1,5 +1,6 @@
 package VivinoTestApp;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
 public class WinePage {
@@ -8,5 +9,10 @@ public class WinePage {
 
     public WinePage(WebDriver webDriver) {
         this.webDriver = webDriver;
+    }
+
+    public void putOnWishList(){
+        webDriver.findElement(By.cssSelector(".addToWishlist__text--3BIjr")).click();
+
     }
 }

@@ -3,7 +3,6 @@ package VivinoTestApp;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvFileSource;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -21,16 +20,9 @@ import java.util.concurrent.TimeUnit;
 
 public class VivinoMain {
 
-
-//    @CsvSource({"Red, 42 , Napa Valley", "White, 37,Napa Valley "})
-
     WebDriver webDriver = new ChromeDriver();
-//            "White,Rhone Valley,36","Red,Rhone Valley,38","White,Rhone Valley,42",            "Red,Napa Valley,36",
-//            "White,Napa Valley,38",
-//            "Red,Napa Valley,42",
-//            "White,Piemonte,36",
-//            "Red,Piemonte,38",
-//            "White,Piemonte,42"
+    WebDriverWait wait = new WebDriverWait(webDriver, Duration.ofSeconds(10));
+
     @ParameterizedTest
     @CsvSource({"White,Rhone Valley,36",
             "Red,Rhone Valley,38",
@@ -71,6 +63,7 @@ public class VivinoMain {
         webDriver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
         WebElement resultName = webDriver.findElement(By.cssSelector("div[class='mobile-column-4 tablet-column-8 desktop-column-6'] a[class='winery']"));
         Assertions.assertEquals(name, resultName.getText());
+        webDriver.close();
     }
 
     @ParameterizedTest
@@ -100,6 +93,7 @@ public class VivinoMain {
         }
 
         Assertions.assertTrue(result);
+        //webDriver.close();
 //        List<WebElement> wines = webDriver.findElements(By.cssSelector("div.card__card--2R5Wh.wineCard__wineCardContent--3cwZt a"));
 //        for(WebElement a:wines) {
 //                System.out.println(a.getText());
@@ -108,32 +102,26 @@ public class VivinoMain {
 
     public ArrayList<Boolean> manageWinePage( String mealName){
         WebDriverWait wait = new WebDriverWait(webDriver, Duration.ofSeconds(2));
+        ArrayList<Boolean> result = new ArrayList<>();
         List<WebElement> wines = webDriver.findElements(By.cssSelector("div.card__card--2R5Wh.wineCard__wineCardContent--3cwZt"));
         webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-        ArrayList<Boolean> result = new ArrayList<>();
+        int iterCountSize = wines.size()-1;
+        System.out.println(iterCountSize);
+        if(iterCountSize > 5) iterCountSize = 5;
         outerloop:
-        for(int j = 0; j<=5 ; j++){
+        for(int j = 0; j <= iterCountSize; j++){
             WebElement wine = wines.get(j);
             Actions action = new Actions(webDriver);
+            wait.until(ExpectedConditions.visibilityOf(wine));
             action.keyDown(Keys.CONTROL).click(wine).keyUp(Keys.CONTROL).build().perform();
             ArrayList<String> tabs = new ArrayList<>(webDriver.getWindowHandles());
+            System.out.println(tabs.size());
             webDriver.switchTo().window(tabs.get(j+1));
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
             JavascriptExecutor js = (JavascriptExecutor) webDriver;
-            webDriver.manage().timeouts().scriptTimeout(Duration.ofSeconds(4));
-            js.executeScript("window.scrollTo(0, 1000)");
-            js.executeScript("window.scrollTo(0, 1500)");
-            js.executeScript("window.scrollTo(0, 1900)");
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
+            for(int i = 900; i<=2100; i += 300)js.executeScript("window.scrollTo(0, "+ i +" )");
+
             List<WebElement> meals = webDriver.findElements(By.cssSelector("div[class='col mobile-column-6 tablet-column-10 desktop-column-7'] a div:nth-child(4)"));
+            wait.until(ExpectedConditions.visibilityOf(meals.get(meals.size()-1)));
             for(WebElement meal: meals) {
                 String findingName =  meal.getText();
                 if (Objects.equals(findingName, mealName)) {
@@ -147,4 +135,37 @@ public class VivinoMain {
         }
         return result;
     }
+
+    @Test
+    public void checkIfLikedWinesInWichList() throws InterruptedException {
+        System.setProperty("webdriver.chrome.driver", "chromedriver.exe");
+        webDriver.get("https://www.vivino.com/");
+        Profile profile = new Profile(webDriver);
+        profile.login();
+        Thread.sleep(2000);
+        new SearchInput(webDriver, "Château Lafite Rothschild");
+        new ResultPage(webDriver).getNthElement(0);
+        new WinePage(webDriver).putOnWishList();
+        profile.goToProfile();
+        Assertions.assertEquals("Château Lafite Rothschild", profile.checkWishList());
+        webDriver.close();
+    }
+
+    @ParameterizedTest
+    @CsvSource({"name1, surname1","name2, surname2","Test, Seleniumov"})
+    public void changeNameAndSurnameTest(String name, String surname) throws InterruptedException {
+        System.setProperty("webdriver.chrome.driver", "chromedriver.exe");
+        webDriver.get("https://www.vivino.com/");
+        Profile profile = new Profile(webDriver);
+        profile.login();
+        profile.goToSettings();
+        profile.changeNameAndSurname(name, surname);
+        profile.goToProfile();
+        String result = webDriver.findElement(By.cssSelector("body > div.wrap > div.user-profile > div > div.container > div.col-sm-4.col-xs-12.user-profile-sidebar > div.user-profile-sidebar-group.user-details.clearfix > div.user-header.text-center.clearfix > div.user-header__name.header-medium.bold")).getText();
+        Assertions.assertEquals(name +" " + surname, result);
+
+        webDriver.close();
+    }
+
+
 }
