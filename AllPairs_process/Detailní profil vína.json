@@ -1,0 +1,22 @@
+{"test_situations": {
+    "note": "",
+    "test_situation": [
+        {
+            "selected_row": 0,
+            "content": "ano - vyber vina - recenze existujou - napsani recenze - recenze"
+        },
+        {
+            "selected_row": 1,
+            "content": "ano - vyber vina - recenze neexistujou - recenze"
+        },
+        {
+            "selected_row": 2,
+            "content": "ano - vyber vina - recenze nezajima, jen informace"
+        },
+        {
+            "selected_row": 3,
+            "content": "ano - vyber vina - recenze existujou - nenapsani recenze"
+        }
+    ],
+    "name": "Test situations 1, TDL= 2, ALG= PCT."
+}}
