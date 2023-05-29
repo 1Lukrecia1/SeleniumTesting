@@ -1,0 +1,22 @@
+{"test_situations": {
+    "note": "",
+    "test_situation": [
+        {
+            "selected_row": 0,
+            "content": "ano - Validni inputy - vino existuje"
+        },
+        {
+            "selected_row": 1,
+            "content": "ano - Validni inputy - vino existuje - Hledani noveho vina - Validni inputy - vino existuje"
+        },
+        {
+            "selected_row": 2,
+            "content": "ano - Validni inputy - vino existuje - Hledani noveho vina - Validni inputy - vino neexistuje"
+        },
+        {
+            "selected_row": 3,
+            "content": "ano - Validni inputy - vino neexistuje"
+        }
+    ],
+    "name": "Test situations 1, TDL= 2, ALG= PCT."
+}}
