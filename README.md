@@ -101,7 +101,7 @@
             <td>Detailní testovací scénáře</td>
             <td>Vytvorte 2* detailni testovaci scenare.</td>
             <td>2</td>
-            <td></td>
+            <td>✅</td>
         </tr>
         <tr>
             <td><strong>Implementace testů</strong></td>
