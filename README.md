@@ -95,7 +95,7 @@
             <td></td>
             <td>Vytvořte procesní testy z těchto diagramů s TDL 2.</td>
             <td>2</td>
-            <td></td>
+            <td>✅</td>
         </tr>
         <tr>
             <td>Detailní testovací scénáře</td>
