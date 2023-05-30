@@ -113,7 +113,7 @@
             <td>Selenium</td>
             <td>10 Selenium testů (každý za 1 bod)</td>
             <td>10</td>
-            <td></td>
+            <td>✅</td>
         </tr>
         <tr>
             <td></td>
