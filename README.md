@@ -119,7 +119,7 @@
             <td></td>
             <td>Data provider (CSV) pro minimálně 3 testy (každý za 2 body)</td>
             <td>6</td>
-            <td></td>
+            <td>✅</td>
         </tr>
     <tfoot>
         <tr>
