@@ -1,5 +1,6 @@
 package VivinoTestApp;
 
+import org.example.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -40,16 +41,47 @@ public class VivinoMain {
         Search search = new Search(webDriver, wineType, Integer.parseInt(rating), region );
         search.completeSearchBar();
         boolean result = true;
-        System.out.println(Arrays.toString(search.vinoFilter.selectVine.resultArray));
-        for(boolean istrue :search.vinoFilter.selectVine.resultArray) {
-            if (!istrue) {
-                result = false;
-                break;
-            }
-        }
-        Assertions.assertTrue(result);
+//        System.out.println(Arrays.toString(search.vinoFilter.selectVine.resultArray));
+        Assertions.assertArrayEquals(new boolean[] {true,true, true}, search.vinoFilter.selectVine.resultArray);
+//        for(boolean istrue :search.vinoFilter.selectVine.resultArray) {
+//            if (!istrue) {
+//                result = false;
+//                break;
+//            }
+//        }
+//        Assertions.assertTrue(result);
         webDriver.close();
     }
+
+    @ParameterizedTest
+    @CsvSource({"Red,Bordeaux,42"})
+    public void isReviewTheSame(String wineType, String region, String rating) {
+        System.setProperty("webdriver.chrome.driver", "chromedriver.exe");
+        webDriver.get("https://www.vivino.com/");
+        WinePage winePage = new WinePage(webDriver);
+        Search search = new Search(webDriver, wineType, Integer.parseInt(rating), region );
+        search.doTheVineChoise();
+
+        WebElement headline = webDriver.findElement(By.cssSelector("body > div.wrap > div.grid.topSection > div > div > div.mobile-column-1.tablet-column-8.desktop-column-6 > div.row.header.breadCrumbs > div > h1 > span.headline"));
+        WebElement vintage = webDriver.findElement(By.cssSelector("body > div.wrap > div.grid.topSection > div > div > div.mobile-column-1.tablet-column-8.desktop-column-6 > div.row.header.breadCrumbs > div > h1 > span.vintage"));
+
+        String ratingOfWine = winePage.getAvRating();
+        String amountOfRatings = winePage.getAmountOfRatings();
+
+        new SearchInput(webDriver, headline.getText() + " " + vintage.getText());
+        List<WebElement> searchingWine2 = webDriver.findElements(By.cssSelector("body > div.wrap > section.search-page.section-alt > div > div > div > div.search-page__content a"));
+        searchingWine2.get(0).click();
+        webDriver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+        String ratingToControl = winePage.getAvRating();
+        String amountOfRatingsToControl = winePage.getAmountOfRatings();
+
+        Assertions.assertEquals(ratingOfWine, ratingToControl);
+        Assertions.assertEquals(amountOfRatings, amountOfRatingsToControl);
+
+        webDriver.close();
+    }
+
+
 
     @Test
     public void ifParamsMatches(){
@@ -101,7 +133,7 @@ public class VivinoMain {
 //            }
         }
 
-    public ArrayList<Boolean> manageWinePage( String mealName){
+    public ArrayList<Boolean> manageWinePage( String mealName) throws InterruptedException {
         WebDriverWait wait = new WebDriverWait(webDriver, Duration.ofSeconds(3));
         ArrayList<Boolean> result = new ArrayList<>();
         List<WebElement> wines = webDriver.findElements(By.cssSelector("div.card__card--2R5Wh.wineCard__wineCardContent--3cwZt > a:first-child"));
@@ -111,19 +143,20 @@ public class VivinoMain {
         }
         webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
         int iterCountSize = wines.size()-1;
-        System.out.println(iterCountSize);
+//        System.out.println(iterCountSize);
         if(iterCountSize > 5) iterCountSize = 5;
         outerloop:
         for(int j = 0; j <= iterCountSize; j++){
-//            WebElement wine = wines.get(j);
-            //wait.until(ExpectedConditions.visibilityOf(wine));
-            Actions action = new Actions(webDriver);
-            action.keyDown(Keys.CONTROL).click(wines.get(j)).keyUp(Keys.CONTROL).build().perform();
-            //webDriver.get(links.get(j));
-            webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(2));
-            ArrayList<String> tabs = new ArrayList<>(webDriver.getWindowHandles());
-            webDriver.switchTo().window(tabs.get(1));
-            System.out.println(tabs.size());
+            webDriver.get(links.get(j));
+//            //WebElement wine = wines.get(j);
+//            //wait.until(ExpectedConditions.visibilityOf(wine));
+//            Actions action = new Actions(webDriver);
+//            action.keyDown(Keys.CONTROL).click(wines.get(j)).keyUp(Keys.CONTROL).build().perform();
+//            //webDriver.get(links.get(j));
+//            webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(2));
+//            ArrayList<String> tabs = new ArrayList<>(webDriver.getWindowHandles());
+//            webDriver.switchTo().window(tabs.get(1));
+//            System.out.println(tabs.size());
             JavascriptExecutor js = (JavascriptExecutor) webDriver;
             for(int i = 900; i<=2100; i += 300)js.executeScript("window.scrollTo(0, "+ i +" )");
             List<WebElement> meals = webDriver.findElements(By.cssSelector("div[class='col mobile-column-6 tablet-column-10 desktop-column-7'] a div:nth-child(4)"));
@@ -132,13 +165,13 @@ public class VivinoMain {
             for(WebElement meal: meals) {
                 String findingName =  meal.getText();
                 if (Objects.equals(findingName, mealName)) {
-                    webDriver.close();
-                    webDriver.switchTo().window(tabs.get(0));
+                    //webDriver.close();
+                    //webDriver.switchTo().window(tabs.get(0));
                     result.add(true);
                     continue outerloop;
                 }
             }
-            webDriver.switchTo().window(tabs.get(0));
+            //webDriver.switchTo().window(tabs.get(0));
             result.add(false);
         }
         return result;
@@ -156,7 +189,7 @@ public class VivinoMain {
         new WinePage(webDriver).putOnWishList();
         profile.goToProfile();
         Assertions.assertEquals("Château Lafite Rothschild", profile.checkWishList());
-        webDriver.close();
+        //webDriver.close();
     }
 
     @ParameterizedTest
@@ -174,6 +207,94 @@ public class VivinoMain {
         webDriver.close();
     }
 
-    
+    @Test
+    public void commentTest() throws InterruptedException {
+        System.setProperty("webdriver.chrome.driver", "chromedriver.exe");
+        webDriver.get("https://www.vivino.com/");
+        Profile profile = new Profile(webDriver);
+        profile.login();
+        Thread.sleep(1000);
+        new SearchInput(webDriver, "Château Lafite Rothschild");
+        new ResultPage(webDriver).getNthElement(0);
+        WinePage winePage = new WinePage(webDriver);
+        winePage.clickOnRaiting();
+        Thread.sleep(1000);
+        String mess = "Test";
+        winePage.setStars(mess);
+        String newReview = winePage.getYourReviews();
+        winePage.deleteLastReview();
+        webDriver.switchTo().alert().accept();
+        Assertions.assertEquals(true, newReview.contains(mess));
+        webDriver.close();
+    }
+
+    @Test
+    public void checkLike() throws InterruptedException {
+        System.setProperty("webdriver.chrome.driver", "chromedriver.exe");
+        webDriver.get("https://www.vivino.com/FR/en/hans-greyl-sauvignon-blanc/w/1177078?year=2020&price_id=31750299#all_reviews");
+        Profile profile = new Profile(webDriver);
+        profile.login();
+        Thread.sleep(2000);
+        scrollPage(1000);
+        Thread.sleep(1000);
+        scrollPage(1500);
+        Thread.sleep(1000);
+        scrollPage(2100);
+        WinePage winePage = new WinePage(webDriver);
+        Thread.sleep(1000);
+        String countOfLikeBefore = webDriver.findElement(By.cssSelector("#all_reviews > div:nth-child(3) > div.col.mobile-column-6.tablet-column-8.desktop-column-9 > div:nth-child(1) > div > div.communityReviewItem__reviewSection--1OjzI > div.communityReview__reviewInfo--16fi- > div.communityReview__userActions--2RDK9 > a.anchor_anchor__m8Qi-.actionButton_anchor__kdR3r.communityReview__innerUserAction--Z7ESk.likeButton__likeButton--XTBaQ > div.likeButton__likeCount--1stJS")).getText();
+        winePage.likeComment();
+        Thread.sleep(500);
+        String countOfLikeAfter = webDriver.findElement(By.cssSelector("#all_reviews > div:nth-child(3) > div.col.mobile-column-6.tablet-column-8.desktop-column-9 > div:nth-child(1) > div > div.communityReviewItem__reviewSection--1OjzI > div.communityReview__reviewInfo--16fi- > div.communityReview__userActions--2RDK9 > a.anchor_anchor__m8Qi-.actionButton_anchor__kdR3r.communityReview__innerUserAction--Z7ESk.likeButton__likeButton--XTBaQ.likeButton__active--18SRT > div.likeButton__likeCount--1stJS")).getText();
+        winePage.unlikeComment();
+        Assertions.assertEquals(Integer.parseInt(countOfLikeBefore)+1, Integer.parseInt(countOfLikeAfter));
+        webDriver.close();
+    }
+
+    @Test
+    public void checkCart() throws InterruptedException {
+        System.setProperty("webdriver.chrome.driver", "chromedriver.exe");
+        webDriver.get("https://www.vivino.com/");
+        Profile profile = new Profile(webDriver);
+        profile.login();
+        Thread.sleep(2000);
+        webDriver.findElement(By.cssSelector("#navigation-container > div > nav > div.navigation_rightNav__D674c > div:nth-child(1) > div")).click();
+        String cssSel = "#navigation-container > div > nav > div.navigation_rightNav__D674c > div:nth-child(1) > div.navigationItem_closeWrapper__n28xG > div.navigationItem_container__6CZxX.shipToDropdown_navItem__op5qL.navigationItem_alignContainerRight__glRHR > ul > li:nth-child(11)";
+        webDriver.findElement(By.cssSelector(cssSel)).click();
+        Thread.sleep(2000);
+        WebElement input = webDriver.findElement(By.cssSelector("input[placeholder='Search any wine']"));
+        String name = "Château Paloumey Haut-Médoc 2018";
+        input.sendKeys(name);
+        input.submit();
+        webDriver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+        List<WebElement> searchingWine = webDriver.findElements(By.cssSelector("body > div.wrap > section.search-page.section-alt > div > div > div > div.search-page__content a"));
+        searchingWine.get(0).click();
+        webDriver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+        Thread.sleep(100);
+        String headline = webDriver.findElement(By.cssSelector("body > div.wrap > div.grid.topSection > div > div > div.mobile-column-1.tablet-column-8.desktop-column-6 > div.row.header.breadCrumbs > div > h1 > span.headline")).getText();
+        String vintage = webDriver.findElement(By.cssSelector("body > div.wrap > div.grid.topSection > div > div > div.mobile-column-1.tablet-column-8.desktop-column-6 > div.row.header.breadCrumbs > div > h1 > span.vintage")).getText();
+        scrollPage(400);
+        WebElement minusButton = webDriver.findElement(By.cssSelector("#purchase-availability > div > div.purchaseAvailability__purchaseAvailability--3bov5 > div > div.purchaseAvailability__row--S-DoM.purchaseAvailability__cta--1Dpz4 > div > div > div.quantityPicker__decrease--31bYs"));
+        for(int i = 0; i<=5; i++){
+            minusButton.click();
+        }
+        webDriver.findElement(By.cssSelector("#purchase-availability > div > div.purchaseAvailability__purchaseAvailability--3bov5 > div > div.purchaseAvailability__row--S-DoM.purchaseAvailability__cta--1Dpz4 > button > span")).click();
+        String result = webDriver.findElement(By.cssSelector("#cart-page > div.cartPage__cartPage--2fVRe > div > div > div.cartPage__cartList--14OQf > div > div.cartListItem__vintage--1MgnJ > div.cartListItem__details--3vJi6 > a > span:nth-child(2)")).getText();
+        webDriver.findElement(By.cssSelector("div.cartListItem__actions--2fUSl > a.anchor__anchor--2QZvA.cartListItem__deleteItem--3Ykqd")).click();
+        Assertions.assertEquals(vintage, result);
+        webDriver.close();
+    }
+
+
+//    @Test
+//    public void
+
+
+
+    public void scrollPage(int scrollLenght){
+        JavascriptExecutor js = (JavascriptExecutor) webDriver;
+        js.executeScript("window.scrollTo(0, "+ scrollLenght +" )");
+    }
+
 
 }
